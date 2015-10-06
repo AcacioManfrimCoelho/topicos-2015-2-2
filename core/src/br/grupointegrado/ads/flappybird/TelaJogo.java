@@ -12,18 +12,17 @@ import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.World;
 
 /**
- * Created by Joao Paulo on 28/09/2015.
+ * acacio.
  */
 public class TelaJogo extends TelaBase {
 
-    private static  final  float ESCALA = 2;
-    private static  final  float PIXEL_METRO = 32; // cada metro tem 32 pixel...
 
-    private OrthographicCamera camera; //camera do jogo
+
+    private OrthographicCamera camera; //camera do jogo      +_ 0 mundo é o jogo em movimento
     private World mundo; // representa o mundo do Box2D
 
     private Box2DDebugRenderer debug; //representa o mundo na tela para ajudar no desenvolvimento.
-
+    private Passaro passaro;
 
     public TelaJogo(MainGame game) {
         super(game);
@@ -37,27 +36,18 @@ public class TelaJogo extends TelaBase {
         debug = new Box2DDebugRenderer();
         mundo = new World(new Vector2(0, -9.8f), false);
 
+        initChao();
         initPassaro();
     }
 
-    private void initPassaro() {
-        BodyDef def = new BodyDef();//objeto de criação do corpo
-        def.type = BodyDef.BodyType.DynamicBody;
-        float y = (Gdx.graphics.getHeight() / 2 / ESCALA) / PIXEL_METRO + 2;
-        float x = (Gdx.graphics.getWidth()/ 2/ ESCALA ) / PIXEL_METRO + 2;
-        def.position.set(x, y);
-        def.fixedRotation = true;
 
-        Body corpo = mundo.createBody(def); // criação do corpo
-
-        CircleShape shape = new CircleShape(); //forma do corpo
-        shape.setRadius(20 / PIXEL_METRO);
-
-        Fixture fixacao = corpo.createFixture(shape, 1); // objeto de exibição do corpo
-
-        shape.dispose();
-
+    private void initChao(){
+        chao = Uitl.criarCorpo(mundo, BodyDef.BodyType.StaticBody, 0 , 0);
     }
+    private void initPassaro() {
+        passaro = new Passaro(mundo);
+    }
+
 
     @Override
     public void render(float delta) {
@@ -66,18 +56,47 @@ public class TelaJogo extends TelaBase {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT); //mantem o buffer de cores
 
 
-        camera.position.set(Gdx.graphics.getWidth() / 2f, Gdx.graphics.getHeight() / 2f, 0);
-        camera.update();
 
-        mundo.step(delta, 6, 2);
+        //desenhar as imagens
+        private void renderizar (float){
 
-        debug.render(mundo, camera.combined.scl(PIXEL_METRO));
+
+        }
+
+        // atualizar calculos do corpo
+        private void atualizar(){
+            mundo.step(1f, 60f, 6, 2)
+            autalizarchao();
+        }
+
+        //atualiza a posicao do chao para acompanhar a posicao do passaro
+        private void autalizarchao(){
+            float largura = camera  = camera.viewportWindth / Util.PIXEL_METRO;
+            vetor2 posicao = chao.getPosition();
+            posicao.x = largura / 2;
+            chao.transform(posicao, 0);
+
+        }
+
+        debug.render(mundo, camera.combined.CPY().scl(PIXEL_METRO));
 
     }
 
     @Override
     public void resize(int width, int height) {
+        camera.setToOrtho(false, width / ESCALA, height / ESCALA );
+        camera.update();
+        redimensionaChao();
+    }
 
+    //configura o tamanho do chao de acordo com o tamanho da tela.
+    private void redimensionaChao(){
+        chao.getFixtureList().clear();
+        float largura = camera.viewportWidth / Uitl.PIXEL_METRO;
+        PoligonShape shepe = new PolygonShape();
+        shepe.setAsBox(largura /2 , Util.ALTURA_CHAO / 2);
+        Fixture forma = Util.criarForma(chao, shape, "CHAO");
+        shepe.dispose();
     }
 
     @Override
@@ -93,5 +112,7 @@ public class TelaJogo extends TelaBase {
     @Override
     public void dispose() {
 
+        debug.dispose();
+        mundo.dispose();
     }
 }

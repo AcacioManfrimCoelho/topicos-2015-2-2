@@ -3,7 +3,7 @@ package br.grupointegrado.ads.flappybird;
 import com.badlogic.gdx.Screen;
 
 /**
- * Created by Joao Paulo on 28/09/2015.
+ * acacio.
  */
 public abstract class TelaBase implements Screen{
 
