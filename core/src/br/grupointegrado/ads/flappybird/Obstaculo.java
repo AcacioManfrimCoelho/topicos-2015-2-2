@@ -90,5 +90,35 @@ public class Obstaculo {
     }
 
 
+    public float getAltura() {
+        return altura;
+    }
 
+    public void setAltura(float altura) {
+        this.altura = altura;
+    }
+
+    public float getPosX() {
+        return posX;
+    }
+
+    public void setPosX(float posX) {
+        this.posX = posX;
+    }
+
+    public float getLargura() {
+        return largura;
+    }
+
+    public void setLargura(float largura) {
+        this.largura = largura;
+    }
+
+    public boolean isPassou() {
+        return passou;
+    }
+
+    public void setPassou(boolean passou) {
+        this.passou = passou;
+    }
 }
